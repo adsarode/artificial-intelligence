@@ -178,6 +178,7 @@ def reduce_puzzle(values):
         # Sanity check, return False if there is a box with zero available values:
         if len([box for box in values.keys() if len(values[box]) == 0]):
             return False
+
     return values
 
 
