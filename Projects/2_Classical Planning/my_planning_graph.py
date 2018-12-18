@@ -83,23 +83,16 @@ class LiteralLayer(BaseLiteralLayer):
         --------
         layers.BaseLayer.parent_layer
         """
-        # TODO: implement this function
-        # for parentA in self.parents[literalA]:
-        #     mutexFound = False
-        #     for parentB in self.parents[literalB]:
-        #         if self.parent_layer.is_mutex(parentA, parentB):
-        #             mutexFound = True
-        #
-        # return False
+        for parentA in self.parents[literalA]:
+            for parentB in self.parents[literalB]:
+                if not self.parent_layer.is_mutex(parentA, parentB):
+                    return False
         return True
 
     def _negation(self, literalA, literalB):
         """ Return True if two literals are negations of each other """
         # TODO: implement this function
-        if literalA == ~literalB or literalB == ~literalA:
-            return True
-        return False
-
+        return literalA == ~literalB or literalB == ~literalA
 
 class PlanningGraph:
     def __init__(self, problem, state, serialize=True, ignore_mutexes=False):
@@ -127,7 +120,7 @@ class PlanningGraph:
         # make no-op actions that persist every literal to the next layer
         no_ops = [make_node(n, no_op=True) for n in chain(*(makeNoOp(s) for s in problem.state_map))]
         self._actionNodes = no_ops + [make_node(a) for a in problem.actions_list]
-        
+
         # initialize the planning graph by finding the literals that are in the
         # first layer and finding the actions they they should be connected to
         literals = [s if f else ~s for f, s in zip(state, problem.state_map)]
@@ -144,7 +137,7 @@ class PlanningGraph:
         level at which the literal first appears in the planning graph. Note
         that the level cost is **NOT** the minimum number of actions to
         achieve a single goal literal.
-        
+
         For example, if Goal_1 first appears in level 0 of the graph (i.e.,
         it is satisfied at the root of the planning graph) and Goal_2 first
         appears in level 3, then the levelsum is 0 + 3 = 3.
@@ -253,7 +246,7 @@ class PlanningGraph:
         negative literals in the leaf nodes of the parent literal level.
 
         The new literal layer contains all literals that could result from taking each possible
-        action in the NEW action layer. 
+        action in the NEW action layer.
         """
         if self._is_leveled: return
 
