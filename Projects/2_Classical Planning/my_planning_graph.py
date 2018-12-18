@@ -20,22 +20,34 @@ class ActionLayer(BaseActionLayer):
         layers.ActionNode
         """
         # TODO: implement this function
-        raise NotImplementedError
+        for childA in self.children[actionA]:
+            if ~childA in self.children[actionB]:
+                return True
+
+        return False
 
 
     def _interference(self, actionA, actionB):
-        """ Return True if the effects of either action negate the preconditions of the other 
+        """ Return True if the effects of either action negate the preconditions of the other
 
         Hints:
             (1) `~Literal` can be used to logically negate a literal
             (2) `self.parents` contains a map from actions to preconditions
-        
+
         See Also
         --------
         layers.ActionNode
         """
         # TODO: implement this function
-        raise NotImplementedError
+        for parentA in self.parents[actionA]:
+            if ~parentA in self.children[actionB]:
+                return True
+
+        for parentB in self.parents[actionB]:
+            if ~parentB in self.children[actionA]:
+                return True
+
+        return False
 
     def _competing_needs(self, actionA, actionB):
         """ Return True if any preconditions of the two actions are pairwise mutex in the parent layer
@@ -43,14 +55,19 @@ class ActionLayer(BaseActionLayer):
         Hints:
             (1) `self.parent_layer` contains a reference to the previous literal layer
             (2) `self.parents` contains a map from actions to preconditions
-        
+
         See Also
         --------
         layers.ActionNode
         layers.BaseLayer.parent_layer
         """
         # TODO: implement this function
-        raise NotImplementedError
+        for parentA in self.parents[actionA]:
+            for parentB in self.parents[actionB]:
+                if self.parent_layer.is_mutex(parentA, parentB):
+                    return True
+
+        return False
 
 
 class LiteralLayer(BaseLiteralLayer):
@@ -67,12 +84,21 @@ class LiteralLayer(BaseLiteralLayer):
         layers.BaseLayer.parent_layer
         """
         # TODO: implement this function
-        raise NotImplementedError
+        # for parentA in self.parents[literalA]:
+        #     mutexFound = False
+        #     for parentB in self.parents[literalB]:
+        #         if self.parent_layer.is_mutex(parentA, parentB):
+        #             mutexFound = True
+        #
+        # return False
+        return True
 
     def _negation(self, literalA, literalB):
         """ Return True if two literals are negations of each other """
         # TODO: implement this function
-        raise NotImplementedError
+        if literalA == ~literalB or literalB == ~literalA:
+            return True
+        return False
 
 
 class PlanningGraph:
@@ -136,7 +162,8 @@ class PlanningGraph:
         Russell-Norvig 10.3.1 (3rd Edition)
         """
         # TODO: implement this function
-        raise NotImplementedError
+        # raise NotImplementedError
+        return True
 
     def h_maxlevel(self):
         """ Calculate the max level heuristic for the planning graph
@@ -166,7 +193,8 @@ class PlanningGraph:
         WARNING: you should expect long runtimes using this heuristic with A*
         """
         # TODO: implement maxlevel heuristic
-        raise NotImplementedError
+        # raise NotImplementedError
+        return True
 
     def h_setlevel(self):
         """ Calculate the set level heuristic for the planning graph
@@ -191,7 +219,8 @@ class PlanningGraph:
         WARNING: you should expect long runtimes using this heuristic on complex problems
         """
         # TODO: implement setlevel heuristic
-        raise NotImplementedError
+        # raise NotImplementedError
+        return True
 
     ##############################################################################
     #                     DO NOT MODIFY CODE BELOW THIS LINE                     #
