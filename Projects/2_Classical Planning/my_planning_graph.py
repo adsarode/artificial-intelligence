@@ -155,8 +155,23 @@ class PlanningGraph:
         Russell-Norvig 10.3.1 (3rd Edition)
         """
         # TODO: implement this function
-        # raise NotImplementedError
-        return True
+        level = 0
+        levelSum = 0
+        goalsRemaining = self.goal
+        goalsFound = set()
+        while goalsRemaining:
+            for goal in goalsRemaining:
+                if goal in self.literal_layers[-1]:
+                    goalsFound.add(goal)
+                    levelSum += level
+            level += 1
+            if self._is_leveled: break  # All levels are extended... in case goal is not in any of the levels
+            self._extend()
+            for found in goalsFound:
+                goalsRemaining.remove(found)
+            goalsFound = set()
+
+        return levelSum
 
     def h_maxlevel(self):
         """ Calculate the max level heuristic for the planning graph
