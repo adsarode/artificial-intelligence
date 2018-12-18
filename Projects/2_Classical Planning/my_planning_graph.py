@@ -86,7 +86,7 @@ class LiteralLayer(BaseLiteralLayer):
         for parentA in self.parents[literalA]:
             for parentB in self.parents[literalB]:
                 if not self.parent_layer.is_mutex(parentA, parentB):
-                    return False
+                    return False    # There exists a way to achience either of literal which is not mutex of other in parent later
         return True
 
     def _negation(self, literalA, literalB):
