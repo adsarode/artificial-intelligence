@@ -155,21 +155,20 @@ class PlanningGraph:
         Russell-Norvig 10.3.1 (3rd Edition)
         """
         # TODO: implement this function
-        level = 0
-        levelSum = 0
+        levelSum, level = 0, 0
         goalsRemaining = self.goal
-        goalsFound = set()
         while goalsRemaining:
-            for goal in goalsRemaining:
+            goalsFound = set()
+            for goal in goalsRemaining: # Stop when all goals are found - which is same as no remaining goals
                 if goal in self.literal_layers[-1]:
                     goalsFound.add(goal)
                     levelSum += level
             level += 1
-            if self._is_leveled: break  # All levels are extended... in case goal is not in any of the levels
-            self._extend()
             for found in goalsFound:
                 goalsRemaining.remove(found)
-            goalsFound = set()
+
+            if self._is_leveled: break  # All levels are extended... This handling is required in case goal is not in any of the levels
+            self._extend()
 
         return levelSum
 
@@ -201,8 +200,22 @@ class PlanningGraph:
         WARNING: you should expect long runtimes using this heuristic with A*
         """
         # TODO: implement maxlevel heuristic
-        # raise NotImplementedError
-        return True
+        maxLevel, level = 0, 0
+        goalsRemaining = self.goal
+        while goalsRemaining:
+            goalsFound = set()
+            for goal in goalsRemaining: # Stop when all goals are found - which is same as no remaining goals
+                if goal in self.literal_layers[-1]:
+                    goalsFound.add(goal)
+                    maxLevel = level
+            level += 1
+            for found in goalsFound:
+                goalsRemaining.remove(found)
+
+            if self._is_leveled: break  # All levels are extended... This handling is required in case goal is not in any of the levels
+            self._extend()
+
+        return maxLevel
 
     def h_setlevel(self):
         """ Calculate the set level heuristic for the planning graph
