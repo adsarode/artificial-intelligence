@@ -239,12 +239,16 @@ class PlanningGraph:
         -----
         WARNING: you should expect long runtimes using this heuristic on complex problems
         """
-        # TODO: implement setlevel heuristic
-        self.fill()
-        for level, litLayer in enumerate(self.literal_layers):
-            if all(gl in litLayer for gl in self.goal):
-                if not any(litLayer.is_mutex(goalA, goalB) for goalA in self.goal for goalB in self.goal):
+        level = 0
+        while True:
+            if all(gl in self.literal_layers[-1] for gl in self.goal):
+                if not any(self.literal_layers[-1].is_mutex(goalA, goalB) for goalA in self.goal for goalB in self.goal):
                     return level
+
+            level += 1
+            if self._is_leveled: break  # All levels are extended... This handling is required in case required criteria is not met in any of the levels
+            self._extend()
+
         return -1
 
 
