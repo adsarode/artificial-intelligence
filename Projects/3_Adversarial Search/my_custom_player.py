@@ -48,6 +48,7 @@ class CustomPlayer(DataPlayer):
             self.queue.put(random.choice(state.actions()))
         else:
             self.queue.put(self.minimax(state, depth=3))
+            # self.queue.put(self.alpha_beta_search(state, depth=3))
 
     def minimax(self, state, depth):
 
@@ -75,3 +76,70 @@ class CustomPlayer(DataPlayer):
         own_liberties = state.liberties(own_loc)
         opp_liberties = state.liberties(opp_loc)
         return len(own_liberties) - len(opp_liberties)
+
+    # def score(self, state):
+    #     own_loc = state.locs[self.player_id]
+    #     opp_loc = state.locs[1 - self.player_id]
+    #     own_liberties = state.liberties(own_loc)
+    #     opp_liberties = state.liberties(opp_loc)
+    #     print("opp_liberties = {} and own_liberties = {}".format(opp_liberties, own_liberties))
+    #     # print("opp_liberties = %s and own_liberties = %s" (opp_liberties, own_liberties))
+    #     if opp_liberties is 0:
+    #         return (own_liberties*2)
+    #         print("Killer Move")
+    #     elif own_liberties is 0:
+    #         return (opp_liberties*-2)
+    #         print("Killer Move")
+    #     else:
+    #        return 1#len(own_liberties) - len(opp_liberties)
+
+    # def score(self, state):
+    #     own_loc = state.locs[self.player_id]
+    #     opp_loc = state.locs[1 - self.player_id]
+    #     own_liberties = len(state.liberties(own_loc))
+    #     opp_liberties = len(state.liberties(opp_loc))
+    #     if opp_liberties < 2:
+    #         return 10#(own_liberties*2)
+    #     elif own_liberties < 2:
+    #         return (opp_liberties*-2)
+    #     else:
+    #        return -10#own_liberties - opp_liberties
+
+    def alpha_beta_search(self, gameState, depth):
+        def min_value(gameState, alpha, beta, depth):
+            if gameState.terminal_test():
+                return gameState.utility(self.player_id)
+            if depth <= 0: return self.score(gameState)
+
+            v = float("inf")
+            for a in gameState.actions():
+                v = min(v, max_value(gameState.result(a), alpha, beta, depth-1))
+                if v <= alpha:
+                    return v
+                beta = min(beta, v)
+            return v
+
+        def max_value(gameState, alpha, beta, depth):
+            if gameState.terminal_test():
+                return gameState.utility(self.player_id)
+            if depth <= 0: return self.score(gameState)
+
+            v = float("-inf")
+            for a in gameState.actions():
+                v = max(v, min_value(gameState.result(a), alpha, beta, depth-1))
+                if v >= beta:
+                    return v
+                alpha = max(alpha, v)
+            return v
+
+        alpha = float("-inf")
+        beta = float("inf")
+        best_score = float("-inf")
+        best_move = None
+        for a in gameState.actions():
+            v = min_value(gameState.result(a), alpha, beta, depth)
+            alpha = max(alpha, v)
+            if v > best_score:
+                best_score = v
+                best_move = a
+        return best_move
