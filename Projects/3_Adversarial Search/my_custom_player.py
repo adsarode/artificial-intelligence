@@ -1,10 +1,13 @@
 import random
 import time
 from sample_players import DataPlayer
-
+from isolation.isolation import _WIDTH, _HEIGHT, _SIZE
 TIME_LIMIT = 150
 SIMULATION_TIME = TIME_LIMIT*0.80
+CENTER = (_WIDTH*_HEIGHT-3)/2
 
+xPenalty = {0:0, 1:0,2:0, 3:0, 4:0.25,5:0.5, 6:1.0}
+yPenalty = {0:0, 1:0,2:0, 3:0.25,4:0.5}
 
 class CustomPlayer(DataPlayer):
     """ Implement your own agent to play knight's Isolation
@@ -139,4 +142,27 @@ class CustomPlayer(DataPlayer):
         opp_loc = state.locs[1 - self.player_id]
         own_liberties = state.liberties(own_loc)
         opp_liberties = state.liberties(opp_loc)
-        return len(own_liberties) - len(opp_liberties)
+        intersect = set(own_liberties).intersection(opp_liberties)
+        #return len(own_liberties) - len(opp_liberties) + len(intersect)
+        #return len(own_liberties) - len(intersect)
+        dy = round((own_loc-57)/13)
+        dx = round(own_loc - 13*dy - 57)
+        distance_from_centre = xPenalty[abs(dx)] + yPenalty[abs(dy)]
+        # print("dist {}, dx {}, dy {}, own_loc {}".format(distance_from_centre, dx, dy, own_loc))
+
+        return len(own_liberties) - len(opp_liberties) #- distance_from_centre
+
+    # def score(self, state):
+    #     own_loc = state.locs[self.player_id]
+    #     opp_loc = state.locs[1 - self.player_id]
+    #     own_liberties = state.liberties(own_loc)
+    #     opp_liberties = state.liberties(opp_loc)
+    #     intersect = set(own_liberties).intersection(opp_liberties)
+    #     #return len(own_liberties) - len(opp_liberties) + len(intersect)
+    #     #return len(own_liberties) - len(intersect)
+    #     dy = round((own_loc-57)/13)
+    #     dx = round(own_loc - 13*dy - 57)
+    #     distance_from_centre = abs(dy/_HEIGHT) + abs(dx/_WIDTH)
+    #     # print("dist {}, dx {}, dy {}, own_loc {}".format(distance_from_centre, dx, dy, own_loc))
+    #
+    #     return len(own_liberties) - len(opp_liberties) - distance_from_centre
