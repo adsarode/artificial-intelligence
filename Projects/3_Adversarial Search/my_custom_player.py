@@ -6,7 +6,7 @@ TIME_LIMIT = 150
 SIMULATION_TIME = TIME_LIMIT*0.80
 CENTER = (_WIDTH*_HEIGHT-3)/2
 
-xPenalty = {0:0, 1:0,2:0, 3:0, 4:0.25,5:0.5, 6:1.0}
+xPenalty = {0:0, 1:0,2:0, 3:0, 4:0.25,5:0.5, 6:1.0} # Index 6 is not required for game play, it is required for my testing.
 yPenalty = {0:0, 1:0,2:0, 3:0.25,4:0.5}
 
 class CustomPlayer(DataPlayer):
@@ -60,7 +60,9 @@ class CustomPlayer(DataPlayer):
         else:
             # self.queue.put(self.minimax(state, depth=3))
             # self.queue.put(self.alpha_beta_search(state, depth=3))
-            self.queue.put(self.iterative_alpha_beta(state, stop_time))
+            move, score = self.alpha_beta_search(state, 3, stop_time)
+            self.queue.put(move)
+            #self.queue.put(self.iterative_alpha_beta(state, stop_time))
 
     def iterative_alpha_beta(self, state, stop_time):
         best_score = float("-inf")
@@ -147,10 +149,10 @@ class CustomPlayer(DataPlayer):
         #return len(own_liberties) - len(intersect)
         dy = round((own_loc-57)/13)
         dx = round(own_loc - 13*dy - 57)
-        distance_from_centre = xPenalty[abs(dx)] + yPenalty[abs(dy)]
+        distance_penalty = xPenalty[abs(dx)] + yPenalty[abs(dy)]
         # print("dist {}, dx {}, dy {}, own_loc {}".format(distance_from_centre, dx, dy, own_loc))
 
-        return len(own_liberties) - len(opp_liberties) #- distance_from_centre
+        return len(own_liberties) - len(opp_liberties) #- distance_penalty
 
     # def score(self, state):
     #     own_loc = state.locs[self.player_id]
