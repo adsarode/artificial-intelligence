@@ -152,19 +152,5 @@ class CustomPlayer(DataPlayer):
         distance_penalty = xPenalty[abs(dx)] + yPenalty[abs(dy)]
         # print("dist {}, dx {}, dy {}, own_loc {}".format(distance_from_centre, dx, dy, own_loc))
 
-        return len(own_liberties) - len(opp_liberties) #- distance_penalty
+        return len(own_liberties) - len(opp_liberties) - distance_penalty
 
-    # def score(self, state):
-    #     own_loc = state.locs[self.player_id]
-    #     opp_loc = state.locs[1 - self.player_id]
-    #     own_liberties = state.liberties(own_loc)
-    #     opp_liberties = state.liberties(opp_loc)
-    #     intersect = set(own_liberties).intersection(opp_liberties)
-    #     #return len(own_liberties) - len(opp_liberties) + len(intersect)
-    #     #return len(own_liberties) - len(intersect)
-    #     dy = round((own_loc-57)/13)
-    #     dx = round(own_loc - 13*dy - 57)
-    #     distance_from_centre = abs(dy/_HEIGHT) + abs(dx/_WIDTH)
-    #     # print("dist {}, dx {}, dy {}, own_loc {}".format(distance_from_centre, dx, dy, own_loc))
-    #
-    #     return len(own_liberties) - len(opp_liberties) - distance_from_centre
