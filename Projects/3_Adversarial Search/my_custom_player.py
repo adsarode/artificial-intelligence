@@ -86,8 +86,8 @@ class CustomPlayer(DataPlayer):
 
             v = float("inf")
             for a in gameState.actions():
+                #if time.time()*1000 >= stop_time: return v     # Turn on for iterative deepening, can be off otherwise
                 v = min(v, max_value(gameState.result(a), alpha, beta, depth-1))
-                if time.time()*1000 >= stop_time: return v
                 if v <= alpha:
                     return v
                 beta = min(beta, v)
@@ -100,7 +100,7 @@ class CustomPlayer(DataPlayer):
 
             v = float("-inf")
             for a in gameState.actions():
-                if time.time()*1000 >= stop_time: return v
+                #if time.time()*1000 >= stop_time: return v     # Turn on for iterative deepening, can be off otherwise
                 v = max(v, min_value(gameState.result(a), alpha, beta, depth-1))
                 if v >= beta:
                     return v
@@ -112,7 +112,7 @@ class CustomPlayer(DataPlayer):
         best_score = float("-inf")
         best_move = None
         for a in gameState.actions():
-            v = min_value(gameState.result(a), alpha, beta, depth)
+            v = min_value(gameState.result(a), alpha, beta, depth-1)
             alpha = max(alpha, v)
             if v > best_score:
                 best_score = v
@@ -144,7 +144,7 @@ class CustomPlayer(DataPlayer):
         opp_loc = state.locs[1 - self.player_id]
         own_liberties = state.liberties(own_loc)
         opp_liberties = state.liberties(opp_loc)
-        intersect = set(own_liberties).intersection(opp_liberties)
+        #intersect = set(own_liberties).intersection(opp_liberties)
         #return len(own_liberties) - len(opp_liberties) + len(intersect)
         #return len(own_liberties) - len(intersect)
         dy = round((own_loc-57)/13)
@@ -153,4 +153,3 @@ class CustomPlayer(DataPlayer):
         # print("dist {}, dx {}, dy {}, own_loc {}".format(distance_from_centre, dx, dy, own_loc))
 
         return len(own_liberties) - len(opp_liberties) - distance_penalty
-
