@@ -51,18 +51,13 @@ class CustomPlayer(DataPlayer):
         #          (the timer is automatically managed for you)
         start_time = time.time()*1000
         stop_time = start_time + SIMULATION_TIME
-
-        # print(SIMULATION_TIME)
-
-        # self.queue.put(random.choice(state.actions()))
         if state.ply_count < 2:
             self.queue.put(random.choice(state.actions()))
         else:
-            # self.queue.put(self.minimax(state, depth=3))
-            # self.queue.put(self.alpha_beta_search(state, depth=3))
+            # move, score = self.minimax(state, 3, stop_time)
             move, score = self.alpha_beta_search(state, 3, stop_time)
+            # self.queue.put(self.iterative_alpha_beta(state, stop_time))
             self.queue.put(move)
-            #self.queue.put(self.iterative_alpha_beta(state, stop_time))
 
     def iterative_alpha_beta(self, state, stop_time):
         best_score = float("-inf")
@@ -84,6 +79,7 @@ class CustomPlayer(DataPlayer):
             if depth <= 0: return self.score(state)
             value = float("inf")
             for action in state.actions():
+                if time.time()*1000 >= stop_time: return value
                 value = min(value, max_value(state.result(action), alpha, beta, depth - 1))
                 if value <= alpha:
                     return value
@@ -95,6 +91,7 @@ class CustomPlayer(DataPlayer):
             if depth <= 0: return self.score(state)
             value = float("-inf")
             for action in state.actions():
+                if time.time()*1000 >= stop_time: return value
                 value = max(value, min_value(state.result(action), alpha, beta, depth - 1))
                 if value >= beta:
                     return value
