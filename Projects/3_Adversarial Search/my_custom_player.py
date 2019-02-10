@@ -78,47 +78,6 @@ class CustomPlayer(DataPlayer):
                 break
         return best_move
 
-    # def alpha_beta_search(self, gameState, depth, stop_time):
-    #     def min_value(gameState, alpha, beta, depth):
-    #         if gameState.terminal_test():
-    #             return gameState.utility(self.player_id)
-    #         if depth <= 0: return self.score(gameState)
-    #
-    #         v = float("inf")
-    #         for a in gameState.actions():
-    #             #if time.time()*1000 >= stop_time: return v     # Turn on for iterative deepening, can be off otherwise
-    #             v = min(v, max_value(gameState.result(a), alpha, beta, depth-1))
-    #             if v <= alpha:
-    #                 return v
-    #             beta = min(beta, v)
-    #         return v
-    #
-    #     def max_value(gameState, alpha, beta, depth):
-    #         if gameState.terminal_test():
-    #             return gameState.utility(self.player_id)
-    #         if depth <= 0: return self.score(gameState)
-    #
-    #         v = float("-inf")
-    #         for a in gameState.actions():
-    #             #if time.time()*1000 >= stop_time: return v     # Turn on for iterative deepening, can be off otherwise
-    #             v = max(v, min_value(gameState.result(a), alpha, beta, depth-1))
-    #             if v >= beta:
-    #                 return v
-    #             alpha = max(alpha, v)
-    #         return v
-    #
-    #     alpha = float("-inf")
-    #     beta = float("inf")
-    #     best_score = float("-inf")
-    #     best_move = None
-    #     for a in gameState.actions():
-    #         v = min_value(gameState.result(a), alpha, beta, depth-1)
-    #         alpha = max(alpha, v)
-    #         if v > best_score:
-    #             best_score = v
-    #             best_move = a
-    #     return best_move, best_score
-
     def alpha_beta_search(self, state, depth, stop_time):
         def min_value(state, alpha, beta, depth):
             if state.terminal_test(): return state.utility(self.player_id)
@@ -144,14 +103,15 @@ class CustomPlayer(DataPlayer):
 
         alpha = float("-inf")
         beta = float("inf")
-        best_score = float("-inf")  # This is actually a duplicate of alpha : can be removed
+        best_value = float("-inf")  # This is actually a duplicate of alpha : can be removed
         best_move = None
         for action in state.actions():
             value = min_value(state.result(action), alpha, beta, depth-1)
-            if value >= best_score:
-                best_score = value
+            alpha = max(alpha, value)
+            if value >= best_value:
+                best_value = value
                 best_move = action
-        return best_move, best_score
+        return best_move, best_value
 
     def minimax(self, state, depth, stop_time):
 
