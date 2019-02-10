@@ -56,7 +56,7 @@ class CustomPlayer(DataPlayer):
         else:
             # move, score = self.minimax(state, 3, stop_time)
             move, score = self.alpha_beta_search(state, 3, stop_time)
-            # self.queue.put(self.iterative_alpha_beta(state, stop_time))
+            # move = self.iterative_alpha_beta(state, stop_time)
             self.queue.put(move)
 
     def iterative_alpha_beta(self, state, stop_time):
