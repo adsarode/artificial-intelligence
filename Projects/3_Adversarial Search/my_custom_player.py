@@ -58,7 +58,7 @@ class CustomPlayer(DataPlayer):
             self.queue.put(random.choice(state.actions()))
         else:
             ''' Monte Carlo Tree Search '''
-            mcts = MonteCarloTreeSearch(IsolationTreeNode(state), bias_param_const = 0.5)
+            mcts = MonteCarloTreeSearch(IsolationTreeNode(state), bias_param_const = 1.25)
             while True:
                 mcts.run()
                 best_action = mcts.best_action()
