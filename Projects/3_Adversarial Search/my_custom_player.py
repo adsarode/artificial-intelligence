@@ -58,6 +58,7 @@ class CustomPlayer(DataPlayer):
             self.queue.put(random.choice(state.actions()))
         else:
             ''' Monte Carlo Tree Search '''
+            self.queue.put(random.choice(state.actions()))  # Ensure that valid action is added to queue at least onece
             mcts = MonteCarloTreeSearch(IsolationTreeNode(state), bias_param_const = 1.25)
             while True:
                 mcts.run()
