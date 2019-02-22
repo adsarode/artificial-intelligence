@@ -59,17 +59,18 @@ class CustomPlayer(DataPlayer):
         else:
             ''' Monte Carlo Tree Search '''
             self.queue.put(random.choice(state.actions()))  # Ensure that valid action is added to queue at least onece
-            mcts = MonteCarloTreeSearch(IsolationTreeNode(state), bias_param_const = 1.25)
-            while True:
-                mcts.run()
-                best_action = mcts.best_action()
-                #print("Based on ", node_counter, " nodes")
-                self.queue.put(best_action)
+            if not state.terminal_test():
+                mcts = MonteCarloTreeSearch(IsolationTreeNode(state), bias_param_const = 1.25)
+                while True:
+                    mcts.run()
+                    best_action = mcts.best_action()
+                    #print("Based on ", node_counter, " nodes")
+                    self.queue.put(best_action)
 
-            ''' Iterative Alpha Beta Prunning Search '''
-            '''for depth in range(3, 10):  # Minimax plays with depth 3, so this depth is always possible
-                best_action = self.alpha_beta_search(state, depth)
-                self.queue.put(best_action)'''
+                ''' Iterative Alpha Beta Prunning Search '''
+                '''for depth in range(3, 10):  # Minimax plays with depth 3, so this depth is always possible
+                    best_action = self.alpha_beta_search(state, depth)
+                    self.queue.put(best_action)'''
 
 
     def alpha_beta_search(self, state, depth):
@@ -159,6 +160,11 @@ class IsolationTreeNode():
     ''' Best action based on the results so far '''
     def best_action(self):
         # return max(child.num_visits for child in self.children)
+
+        # if not self.children:
+        #     print("Empty children list", self.state)
+        #     print("Is this a terminal node", self.is_terminal())
+        #     print("**********************************************")
         best_child = max(self.children.keys(), key = lambda item: item.num_visits)
         return self.children[best_child]
 
