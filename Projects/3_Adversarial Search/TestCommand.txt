@@ -1,0 +1,29 @@
+cd "C:\D2\MyGithub\adsAI\artificial-intelligence\Projects\3_Adversarial Search"
+activate aind
+prompt $$ 
+
+python run_match.py -p 4 -r 25
+
+python run_match.py -p 4 -r 10 -f
+
+python run_match.py -p 4 -r 100 -o RANDOM
+python run_match.py -p 4 -r 100 -o GREEDY
+python run_match.py -p 4 -r 100 -o MINIMAX
+
+
+python run_match.py -p 4 -r 15 -o RANDOM -f
+python run_match.py -p 4 -r 15 -o GREEDY -f
+python run_match.py -p 4 -r 15 -o MINIMAX -f
+
+
+
+cd "C:\D2\MyGithub\adsAI\artificial-intelligence/Projects/4_hmm tagger"
+activate aind
+prompt $$
+jupyter notebook
+
+
+python -m pickle data.pickle
+
+to run tests
+nose2
